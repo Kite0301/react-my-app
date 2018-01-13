@@ -1,0 +1,64 @@
+* {
+  margin: 0;
+  font-family:"ヒラギノ丸ゴ Pro W4","ヒラギノ丸ゴ Pro","Hiragino Maru Gothic Pro","ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","HG丸ｺﾞｼｯｸM-PRO","HGMaruGothicMPRO";
+  color: #2b546a;
+  box-sizing: border-box;
+}
+
+#root {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f9fbfe;
+  padding: 64px;
+}
+
+.main {
+  margin: 0 auto;
+  padding: 32px 40px;
+  width: 640px;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  max-height: 100%;
+  overflow: scroll;
+}
+
+h1 {
+  font-weight: normal;
+  font-size: 30px;
+  margin-bottom: 16px;
+}
+
+.tasks {
+  font-size: 22px;
+  padding: 0 8px;
+  margin-bottom: 20px;
+}
+
+.task {
+  position: relative;
+  margin-bottom: 6px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.task i {
+  width: 24px;
+  margin-right: 4px;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.tasks .fa-times {
+  float: right;
+  margin-top: 4px;
+  color: #94959c;
+}
+
+input[type="text"] {
+  font-size: 21px;
+  padding: 2px 8px;
+}
