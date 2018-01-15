@@ -37,7 +37,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-.task {
+.list {
   position: relative;
   margin-bottom: 20px;
   border-bottom: 1px dotted #d3d6dc;
@@ -46,14 +46,14 @@ h1 {
   -ms-user-select: none;
 }
 
-.task i {
+.list i {
   width: 24px;
   margin-right: 4px;
   font-size: 23px;
   cursor: pointer;
 }
 
-.tasks .fa-times {
+.list .fa-times {
   float: right;
   margin-top: 4px;
   color: #94959c;

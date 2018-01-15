@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 class List extends React.Component {
   render() {
     return (
-      <div className='task'>
+      <div className='list'>
         <i className='fa fa-square-o' />
         {this.props.title}
       </div>
