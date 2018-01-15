@@ -13,13 +13,6 @@ class List extends React.Component {
     this.setState({checked: !this.state.checked})
   }
 
-  handleClickRemoveBtn() {
-    const {title, removeTask} = this.props
-    if (window.confirm('「' + title + '」を本当に削除しますか？')) {
-      removeTask(title)
-    }
-  }
-
   render() {
     return (
       <div className='task'>
@@ -31,10 +24,6 @@ class List extends React.Component {
           )}
         </span>
         {this.props.title}
-        <i
-          className='fa fa-times'
-          onClick={this.handleClickRemoveBtn.bind(this)}
-        />
       </div>
     );
   }
@@ -66,14 +55,6 @@ class Main extends React.Component {
     this.setState({inputText: event.target.value});
   }
 
-  removeTask(text) {
-    const {tasks} = this.state
-    const newTasks = tasks.filter((task) => {
-      return task !== text
-    })
-    this.setState({tasks: newTasks})
-  }
-
   render() {
     return (
       <div className='main'>
@@ -81,11 +62,7 @@ class Main extends React.Component {
         <div className='tasks'>
           {this.state.tasks.map((task, index) => {
             return (
-              <List
-                key={`list-${index}`}
-                title={task}
-                removeTask={this.removeTask.bind(this)}
-              />
+              <List key={`list-${index}`} title={task} />
             )
           })}
         </div>
