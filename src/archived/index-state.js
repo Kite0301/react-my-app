@@ -23,9 +23,9 @@ class List extends React.Component {
       <div className='list'>
         <span onClick={this.changeChecked.bind(this)}>
           {this.state.checked ? (
-            <i className='fa fa-check-square-o' />
+            <i className='fas fa-check-circle' />
           ) : (
-            <i className='fa fa-square-o' />
+            <i className='far fa-circle' />
           )}
         </span>
         {this.props.title}

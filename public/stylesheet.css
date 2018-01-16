@@ -46,17 +46,9 @@ h1 {
   -ms-user-select: none;
 }
 
-.list i {
-  width: 24px;
-  margin-right: 4px;
-  font-size: 23px;
+i {
+  margin-right: 10px;
   cursor: pointer;
-}
-
-.list .fa-times {
-  float: right;
-  margin-top: 4px;
-  color: #94959c;
 }
 
 input[type="text"] {

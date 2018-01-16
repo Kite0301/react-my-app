@@ -5,7 +5,7 @@ class List extends React.Component {
   render() {
     return (
       <div className='list'>
-        <i className='fa fa-square-o' />
+        <i className='far fa-circle' />
         トイレ掃除
       </div>
     );
