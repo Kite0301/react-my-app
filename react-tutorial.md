@@ -234,6 +234,10 @@ class Main extends React.Component {
 ```html
 <i className='far fa-circle'></i>
 ```
+の省略した書き方です。  
+このように、中身テキストがない場合には省略して書くことができます。
+
+※ クラス名の `far fa-circle` に関しては後ほど説明します。
 
 この時点での「index.js」のコードは [こちら](https://github.com/Kite0301/react-my-app/blob/master/src/archived/index-component.js) から確認できます。
 
@@ -260,16 +264,376 @@ class Main extends React.Component {
 
 ブラウザで表示結果が変わっていることを確かめてみましょう。
 
+また、今回はアイコンの表示で [Font Awesome](https://fontawesome.com/) を使用していますので、そのためのCSSも追加しましょう。
+```html
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.4/css/all.css">
+```
+
+なお、前の章で追加した `far fa-circle` は、Font Awesome で丸いアイコンを表示するためのクラス名です。  
+[https://fontawesome.com/icons/circle?style=regular](https://fontawesome.com/icons/circle?style=regular)
+
 ## 5. props ~ コンポーネント間のデータの受け渡し ~
 
+前の章で作成した `List` コンポーネントを使用して、複数のタスクを表示できるようにしてみましょう。
 
+↓ `Main` コンポーネント内
+```js
+<div className='main'>
+  <h1>タスク一覧</h1>
+  <div className='tasks'>
+    <List />
+    <List />
+  </div>
+</div>
+```
+しかし、これでは「トイレ掃除」が2つ表示されてしまいます。
+
+ここでは「タスクの種類だけコンポーネントを用意する」のではなく、「`List`コンポーネント内の表示を変更できる」ようにしてみましょう。
+
+コンポーネントを呼び出す（用いる）ときには、そのコンポーネントに情報を渡すことができます。  
+今回はそれぞれの`List`コンポーネントに**title**という名前の情報を渡してみましょう。  
+（この名前は自分で自由に決めることができます）
+
+```html
+<div className='main'>
+  <h1>タスク一覧</h1>
+  <div className='tasks'>
+    <List title='トイレ掃除' />
+    <List title='ポチの散歩' />
+  </div>
+</div>
+```
+
+これで情報を「渡す」ことはできました。  
+次はコンポーネント側で情報を受け取り、表示してみましょう。
+
+コンポーネントに渡した情報は **this.props** という値に入るようになっています。  
+`title` という名前をつけて渡したあたいは、`this.props.title` とすることで使用できます。
+
+```js
+return (
+  <div className='list'>
+    <i className='far fa-circle' />
+    {this.props.title}
+  </div>
+);
+```
+
+上記のように、`トイレ掃除` と書かれていた部分を `{this.props.title}` に書き換えてください。  
+これで上からそれぞれ「トイレ掃除」「ポチの散歩」が表示されたかと思います。
+
+なお、このようにJSX内でJavaScriptの変数などを用いる場合には **コードを{}で囲む** 必要があります。
 
 この時点での「index.js」のコードは [こちら](https://github.com/Kite0301/react-my-app/blob/master/src/archived/index-props.js) から確認できます。
 
 ## 6. state ~ コンポーネントの状態管理 ~
 
+次はタスクに左側に表示されているアイコンをクリックすると、チェックマークを付けられるようにしましょう。
+
+Reactのコンポーネントで情報を管理する方法として、「props」の他に「**state**」というものがあります。  
+「props」がコンポーネント間の値の受け渡しであったのに対し、「state」はコンポーネント内で状態を管理するのに用います。
+
+今、`List`コンポーネントは2つ呼び出されていますが、それぞれのコンポーネントが「チェックされている状態であるか？」という情報を保存しておけば、その値をもとにアイコンの表示を切り替えることが可能です。
+
+まず、必要なコードを整えましょう。
+```js
+class List extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      checked: false,
+    }
+  }
+
+  render() {
+    // 中略
+  }
+}
+```
+
+上記 `constructor` という部分を追加してください。  
+`constructor` はコンポーネントの初期設定を行うためのものです。
+
+```js
+this.state = {
+  checked: false,
+}
+```
+
+という部分では、`state` の `checked` の値は、初期状態では `false` である、ということを意味しています。
+
+`render` 内も`state`を用いて書き換えてみましょう。
+
+```js
+render() {
+  return (
+    <div className='list'>
+      {this.state.checked
+        ? <i className='fas fa-check-circle' />
+        : <i className='far fa-circle' />
+      }
+      {this.props.title}
+    </div>
+  );
+}
+```
+
+このように書くことで、`this.state.checked` の値が `true` の時はチェックマークが、  
+値が `false` の時は通常の◯が表示されるようになります。
+
+---
+
+では次は、このアイコンをクリックすると `this.state.checked` の値が `false` から `true` へ切り替わるようにしてみましょう。
+
+まず、アイコン部分全体を `<span>` で囲みます。
+
+```js
+<span>
+  {this.state.checked
+    ? <i className='fas fa-check-circle' />
+    : <i className='far fa-circle' />
+  }
+</span>
+```
+
+「<span>をクリックしたら、〇〇をする」という処理を書いてみましょう。
+
+```js
+changeChecked() {
+  // ここに<span>をクリックした時の処理を書く
+}
+
+render() {
+  return (
+    <div className='list'>
+      <span onClick={this.changeChecked.bind(this)}>
+        {this.state.checked
+          ? <i className='fas fa-check-circle' />
+          : <i className='far fa-circle' />
+        }
+      </span>
+      {this.props.title}
+    </div>
+  );
+}
+```
+
+1. `<span>`に`onClick`を追加し、その値に`{this.changeChecked.bind(this)}`を指定します
+2. `render`の外で`changeChecked`というメソッドを用意します
+
+このようにすることで、`<span>` をクリックすると、`changeChecked`メソッドの中の処理が実行されるようになります。
+
+後は、`changeChecked` の中に `this.state.checked` の値を書き換える処理を追加しましょう。
+
+```js
+changeChecked() {
+  this.setState({checked: !this.state.checked})
+}
+```
+
+`state` の値を書き換えるには **this.setState({名前: 値})** とします。  
+今の `this.state.checked` の値とは逆にしたいので、`!this.state.checked` と先頭に `!` を付けています。
+
 この時点での「index.js」のコードは [こちら](https://github.com/Kite0301/react-my-app/blob/master/src/archived/index-state.js) から確認できます。
 
 ## 7. フォームの扱い
 
-この時点での「index.js」のコードは [こちら](https://github.com/Kite0301/react-my-app/blob/master/src/archived/index-add.js) から確認できます。
+最後に、フォームを追加してタスクを追加できるようにしてみましょう。
+
+そのためにまずは、`Main`コンポーネントで各タスクのタイトルを `state` で管理するようにします。
+
+```js
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tasks: ['トイレ掃除', 'ポチの散歩'],
+    }
+  }
+  // 省略
+}
+```
+
+`tasks` という名前で、配列を用いて管理しましょう。
+
+`render`内でも `this.state.tasks` を用いて各タスクを表示するように変えましょう。
+
+```js
+render() {
+  return (
+    <div className='main'>
+      <h1>タスク一覧</h1>
+      <div className='tasks'>
+        {this.state.tasks.map((task, index) => {
+          return (
+            <List key={`list-${index}`} title={task} />
+          )
+        })}
+      </div>
+    </div>
+  );
+}
+```
+
+Reactで配列の中身を1つづつ表示するには、上記のように `map` を用いると便利です。  
+`map`の中で表示する要素には、必ず `key` を指定する必要があります。
+
+次に、フォームで新たに入力したタスク名を管理するための `inputText` という `state` を追加しましょう。
+
+```js
+constructor(props) {
+  super(props);
+  this.state = {
+    tasks: ['トイレ掃除', 'ポチの散歩'],
+    inputText: '',
+  }
+}
+```
+
+初期状態では空の文字列 `''` にしておきます。
+
+実際に表示するフォームも追加しましょう。
+
+```js
+render() {
+  return (
+    <div className='main'>
+      <h1>タスク一覧</h1>
+      <div className='tasks'>
+        {this.state.tasks.map((task, index) => {
+          return (
+            <List key={`list-${index}`} title={task} />
+          )
+        })}
+      </div>
+      <form>
+        <input type='text' />
+      </form>
+    </div>
+  );
+}
+```
+
+`<form>` を追加し、その中に `<input>` を追加しましょう。
+
+先ほどの `this.state.inputText` の値が `<input>` の値になるので、以下のように `value` を追加します。
+
+```js
+<form>
+  <input
+    type='text'
+    value={this.state.inputText}
+  />
+</form>
+```
+
+しかし、この状態では `this.state.inputText` が常に `''` なので、フォームに文字を入力しても何も表示されません。  
+ユーザーが文字を入力する度に、`this.state.inputText` の値が更新されるようにしましょう。
+
+```js
+handleChangeText(event) {
+  this.setState({inputText: event.target.value});
+}
+
+render() {
+  return (
+    <div className='main'>
+      <h1>タスク一覧</h1>
+      <div className='tasks'>
+        {this.state.tasks.map((task, index) => {
+          return (
+            <List key={`list-${index}`} title={task} />
+          )
+        })}
+      </div>
+      <form>
+        <input
+          type='text'
+          value={this.state.inputText}
+          onChange={this.handleChangeText.bind(this)}
+        />
+      </form>
+    </div>
+  );
+}
+```
+
+前の章で学習した `onClick` の代わりに、ここでは `onChange` を用いましょう。  
+`<input>`に文字を入力する度に `handleChangeText` というメソッドが呼ばれます。
+
+メソッドの中では、`event.target.value` で入力した文字を取得することができます。
+
+次に、値を送信した時（Enterキーを押した時）の処理を追加します。  
+「送信した時」は `onSubmit` を用います。
+
+```js
+<form onSubmit={this.handleSubmit.bind(this)}>
+  <input
+    type='text'
+    value={this.state.inputText}
+    onChange={this.handleChangeText.bind(this)}
+  />
+</form>
+```
+
+`handleSubmit` メソッドも用意しましょう。
+
+```js
+handleSubmit(event) {
+  event.preventDefault()
+}
+```
+
+フォームを送信すると、自動的にページ遷移が発生してしまいます。  
+これを防ぐため、`onSubmit` の処理内では `event.preventDefault()` を用いるようにします。
+
+`inputText` の値を配列である `tasks` に追加します。
+```js
+handleSubmit(event) {
+  event.preventDefault()
+
+  const newTasks = this.state.tasks    // 1
+  newTasks.push(this.state.inputText)  // 2
+  this.setState({
+    tasks: newTasks,                   // 3
+    inputText: '',                     // 4
+  })
+}
+```
+
+やや複雑ですが、やっていることは、
+
+1. 定数`newTasks`に`this.state.tasks`の値（配列）を代入
+2. `newTasks`の末尾に`this.state.inputText`の値を追加
+3. `state`の`tasks`の値を更新
+4. `state`の`inputText`の値を空文字列に更新
+
+となります。
+
+最後に、空の状態では送信できないようにしたら完成です！
+
+```js
+handleSubmit(event) {
+  event.preventDefault()
+
+  if (this.state.inputText === '') {
+    return
+  }
+
+  const newTasks = this.state.tasks
+  newTasks.push(this.state.inputText)
+  this.setState({
+    tasks: newTasks,
+    inputText: '',
+  })
+}
+```
+
+完成した「index.js」のコードは [こちら](https://github.com/Kite0301/react-my-app/blob/master/src/index.js) から確認できます。
+
+---
+
+やや急ぎ足で解説したのでわかりにくい箇所もあったかもしれませんが、これでReactの基礎を学習できたはずです。  
+最後まで読んでいただきありがとうございます。
+
+最終更新: 2018/01/18

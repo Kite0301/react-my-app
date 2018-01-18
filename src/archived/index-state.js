@@ -10,11 +10,6 @@ class List extends React.Component {
   }
 
   changeChecked() {
-    // if (this.state.checked) {
-    //   this.setState({checked: false})
-    // } else {
-    //   this.setState({checked: true})
-    // }
     this.setState({checked: !this.state.checked})
   }
 
@@ -22,11 +17,10 @@ class List extends React.Component {
     return (
       <div className='list'>
         <span onClick={this.changeChecked.bind(this)}>
-          {this.state.checked ? (
-            <i className='fas fa-check-circle' />
-          ) : (
-            <i className='far fa-circle' />
-          )}
+          {this.state.checked
+            ? <i className='fas fa-check-circle' />
+            : <i className='far fa-circle' />
+          }
         </span>
         {this.props.title}
       </div>

@@ -17,11 +17,10 @@ class List extends React.Component {
     return (
       <div className='list'>
         <span onClick={this.changeChecked.bind(this)}>
-          {this.state.checked ? (
-            <i className='fas fa-check-circle' />
-          ) : (
-            <i className='far fa-circle' />
-          )}
+          {this.state.checked
+            ? <i className='fas fa-check-circle' />
+            : <i className='far fa-circle' />
+          }
         </span>
         {this.props.title}
       </div>
@@ -40,13 +39,15 @@ class Main extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    const {tasks, inputText} = this.state
-    if (inputText === '') {
+
+    if (this.state.inputText === '') {
       return
     }
-    tasks.push(inputText)
+
+    const newTasks = this.state.tasks
+    newTasks.push(this.state.inputText)
     this.setState({
-      tasks: tasks,
+      tasks: newTasks,
       inputText: '',
     })
   }
