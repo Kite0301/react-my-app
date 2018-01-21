@@ -6,6 +6,7 @@ class List extends React.Component {
     super(props);
     this.state = {
       checked: false,
+      display: true,
     }
   }
 
@@ -13,29 +14,29 @@ class List extends React.Component {
     this.setState({checked: !this.state.checked})
   }
 
-  handleClickRemoveBtn() {
-    const {title, removeTask} = this.props
-    if (window.confirm('「' + title + '」を本当に削除しますか？')) {
-      removeTask(title)
-    }
+  hideTask() {
+    this.setState({display: false})
   }
 
   render() {
     return (
-      <div className='list'>
-        <span onClick={this.changeChecked.bind(this)}>
-          {this.state.checked ? (
-            <i className='fas fa-check-circle' />
-          ) : (
-            <i className='far fa-circle' />
-          )}
-        </span>
-        {this.props.title}
-        <i
-          className='fa fa-times'
-          onClick={this.handleClickRemoveBtn.bind(this)}
-        />
-      </div>
+      this.state.display ? (
+        <div className='list'>
+          <span onClick={this.changeChecked.bind(this)} >
+            {this.state.checked
+              ? <i className='fas fa-check-circle' />
+              : <i className='far fa-circle' />
+            }
+          </span>
+          {this.props.title}
+          <i
+            className="fas fa-times"
+            onClick={this.hideTask.bind(this)}
+          />
+        </div>
+      ) : (
+        null
+      )
     );
   }
 }
@@ -49,29 +50,20 @@ class Main extends React.Component {
     }
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
-    const {tasks, inputText} = this.state
-    if (inputText === '') {
-      return
-    }
-    tasks.push(inputText)
-    this.setState({
-      tasks: tasks,
-      inputText: '',
-    })
-  }
-
   handleChangeText(event) {
     this.setState({inputText: event.target.value});
   }
 
-  removeTask(text) {
-    const {tasks} = this.state
-    const newTasks = tasks.filter((task) => {
-      return task !== text
-    })
-    this.setState({tasks: newTasks})
+  handleSubmit(event) {
+    event.preventDefault()
+
+    if (this.state.inputText === '') {
+      return
+    }
+
+    const newTasks = this.state.tasks
+    newTasks.push(this.state.inputText)
+    this.setState({tasks: newTasks, inputText: ''})
   }
 
   render() {
@@ -81,11 +73,7 @@ class Main extends React.Component {
         <div className='tasks'>
           {this.state.tasks.map((task, index) => {
             return (
-              <List
-                key={`list-${index}`}
-                title={task}
-                removeTask={this.removeTask.bind(this)}
-              />
+              <List key={`list-${index}`} title={task} />
             )
           })}
         </div>
